@@ -3,19 +3,21 @@ shader_type particles;
 render_mode keep_data, disable_force, disable_velocity;
 
 uniform bool use_path_emission = false;
+uniform bool active = true;
+uniform mat4 frozen_transform = mat4(1);
 
 void process() {
 	float amount = LIFETIME;
 
-	vec4 a = EMISSION_TRANSFORM * vec4(0, 1, 0, 1);
-	vec4 b = EMISSION_TRANSFORM * vec4(0, -1, 0, 1);
+	vec4 a = (active ? EMISSION_TRANSFORM : frozen_transform) * vec4(0, 1, 0, 1);
+	vec4 b = (active ? EMISSION_TRANSFORM : frozen_transform) * vec4(0, -1, 0, 1);
 
 	if (CUSTOM.w == 0.0) {
 		CUSTOM.w = float(INDEX) + 1.0;
 		TRANSFORM = mat4(a, a, b, b);
 
 		if (use_path_emission) {
-			vec4 c = EMISSION_TRANSFORM * vec4(1, 0, 0, 1);
+			vec4 c = (active ? EMISSION_TRANSFORM : frozen_transform) * vec4(1, 0, 0, 1);
 			CUSTOM.xyz = c.xyz;
 			// Mark as not yet cycled
 			COLOR = vec4(c.xyz, -1.0);
@@ -32,7 +34,7 @@ void process() {
 		TRANSFORM = mat4(a, a, b, b);
 
 		if (use_path_emission) {
-			vec4 c = EMISSION_TRANSFORM * vec4(1, 0, 0, 1);
+			vec4 c = (active ? EMISSION_TRANSFORM : frozen_transform) * vec4(1, 0, 0, 1);
 			CUSTOM.xyz = c.xyz;
 			// Mark as properly cycled
 			COLOR = vec4(c.xyz, amount);
@@ -44,7 +46,7 @@ void process() {
 		TRANSFORM[2] = b;
 
 		if (use_path_emission) {
-			vec4 c = EMISSION_TRANSFORM * vec4(1, 0, 0, 1);
+			vec4 c = (active ? EMISSION_TRANSFORM : frozen_transform) * vec4(1, 0, 0, 1);
 			COLOR = vec4(c.xyz, amount);
 		}
 	}

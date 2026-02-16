@@ -1,8 +1,9 @@
 shader_type spatial;
 
-render_mode unshaded, world_vertex_coords, cull_disabled;
+render_mode world_vertex_coords, cull_disabled, depth_draw_never, shadows_disabled, ambient_light_disabled, blend_add;
 
-uniform sampler2D tex : repeat_enable, source_color, hint_default_white;
+uniform sampler2D tex : repeat_disable, source_color, hint_default_white;
+uniform bool texture_repeat = true;
 uniform sampler2D mask : hint_default_white;
 uniform float mask_strength = 1.0;
 uniform vec2 uv_offset = vec2(0);
@@ -16,6 +17,8 @@ uniform bool use_path_emission = false;
 uniform sampler2D path_texture : filter_linear, repeat_disable;
 uniform int path_point_count = 0;
 uniform float ribbon_width = 0.05;
+
+uniform float emission_strength : hint_range(0.0, 16.0) = 0.0;
 
 #define vertical_texture  bool(flags & 1)
 #define use_red_as_alpha  bool(flags & 2)
@@ -168,50 +171,61 @@ void vertex() {
 }
 
 void fragment() {
-	// Discard hidden path segments (uncycled or zero-length)
-	if (v_is_path > 0.5 && v_hide > 0.5) {
-		discard;
-	}
+    if (v_is_path > 0.5 && v_hide > 0.5) {
+        discard;
+    }
 
-	vec2 base_uv = UV;
+    vec2 base_uv = UV;
 
-	if (v_is_path < 0.5 && dewiggle) {
-		base_uv /= scale_interp;
-	}
+    if (v_is_path < 0.5 && dewiggle) {
+        base_uv /= scale_interp;
+    }
 
-	vec2 raw_uv = base_uv;
-	base_uv -= uv_offset;
+    vec2 raw_uv = base_uv;
+    base_uv -= uv_offset;
 
-	if (vertical_texture) {
-		base_uv = base_uv.yx;
-	}
+    if (vertical_texture) {
+        base_uv = base_uv.yx;
+    }
 
-	vec4 T = textureLod(tex, base_uv, 0.0);
-	ALBEDO = T.rgb;
-	ALPHA = T.a;
+    vec2 tex_uv = base_uv;
+    if (texture_repeat) {
+        tex_uv = fract(tex_uv);
+    } else {
+        tex_uv = clamp(tex_uv, vec2(0.0), vec2(1.0));
+    }
 
-	if (use_red_as_alpha) {
-		ALBEDO = vec3(1);
-		ALPHA = T.r;
-	}
+    vec4 T = textureLod(tex, tex_uv, 0.0);
+    vec3 col = T.rgb;
+    ALPHA = T.a;
 
-	// For path mode, only use UV.x (trail position) for color_ramp
-	vec2 ramp_uv = raw_uv;
-	if (v_is_path > 0.5) {
-		ramp_uv = vec2(raw_uv.x, 0.5);
-	}
-	T = textureLod(color_ramp, ramp_uv, 0.0);
-	ALBEDO *= T.rgb;
-	ALPHA *= T.a;
+    if (use_red_as_alpha) {
+        col = vec3(1);
+        ALPHA = T.r;
+    }
 
-	vec4 M = textureLod(mask, base_uv, 0.0);
-	ALPHA *= (M.r * mask_strength);
+    vec2 ramp_uv = raw_uv;
+    if (v_is_path > 0.5) {
+        ramp_uv = vec2(raw_uv.x, 0.5);
+    }
+    T = textureLod(color_ramp, ramp_uv, 0.0);
+    col *= T.rgb;
+    ALPHA *= T.a;
 
-	if (v_is_path < 0.5 && clip_overlaps) {
-		float ababab = clip.x * clip.y;
-		if (ababab < 0.0) {
-			if (abs(mesh_uv.x - 0.5) < 0.5)
-				discard;
-		}
-	}
+    vec4 M = textureLod(mask, tex_uv, 0.0);
+    ALPHA *= (M.r * mask_strength);
+
+    if (v_is_path < 0.5 && clip_overlaps) {
+        float ababab = clip.x * clip.y;
+        if (ababab < 0.0) {
+            if (abs(mesh_uv.x - 0.5) < 0.5)
+                discard;
+        }
+    }
+
+    ALBEDO = vec3(0.0);
+    SPECULAR = 0.0;
+    ROUGHNESS = 1.0;
+    METALLIC = 0.0;
+    EMISSION = col * (1.0 + emission_strength);
 }

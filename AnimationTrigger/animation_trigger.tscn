@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://cjsoq6lfpnk8t"]
+
+[ext_resource type="Script" uid="uid://bp56hdof0016y" path="res://AnimationTrigger/animation_trigger.gd" id="1_kj8u1"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ra4rb"]
+size = Vector3(0.8652344, 5.728546, 5.480961)
+
+[node name="AnimationTrigger" type="Area3D"]
+script = ExtResource("1_kj8u1")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_ra4rb")

@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://qpmu8jnvd6qt"]
+
+[ext_resource type="Texture2D" uid="uid://cny00jhafgujl" path="res://greyboxing/greyboxx.png" id="1_h3gx4"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_m41ni"]
+albedo_texture = ExtResource("1_h3gx4")
+uv1_scale = Vector3(0.5, 0.5, 0.5)
+uv1_triplanar = true
+
+[node name="greybox" type="CSGBox3D"]
+material = SubResource("StandardMaterial3D_m41ni")

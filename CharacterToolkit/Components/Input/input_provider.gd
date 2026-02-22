@@ -4,7 +4,7 @@ class_name InputProvider
 extends Node
 
 @export var priority: int = 0
-@export var mouse_sensitivity: float = 0.002
+@export var mouse_sensitivity: float = 0.005
 
 var _mouse_motion: Vector2 = Vector2.ZERO
 

@@ -4,8 +4,8 @@ extends Node
 
 @export var priority: int = 0
 @export_group("Gravity Source")
-@export var use_project_gravity: bool = true
-@export var custom_gravity: float = 9.8
+@export var use_project_gravity: bool = false
+@export var custom_gravity: float = 25
 
 @export_group("Rise and Fall")
 @export var rise_multiplier: float = 0.5

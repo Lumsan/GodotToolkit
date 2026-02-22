@@ -1,5 +1,4 @@
 # components/interaction/interaction_ray.gd
-## Casts a ray from the camera to detect interactable objects.
 class_name InteractionRay
 extends Node
 
@@ -7,7 +6,6 @@ extends Node
 
 @export_group("Raycast")
 @export var interaction_distance: float = 3.0
-## Collision mask for the interaction ray
 @export_flags_3d_physics var interaction_mask: int = 1
 
 @export_group("Input")
@@ -56,7 +54,12 @@ func post_process(data: CharacterData, _delta: float) -> void:
 	if not _camera or not _camera.is_inside_tree():
 		return
 
+	# Try direct raycast first
 	var new_interactable := _raycast()
+
+	# If nothing hit directly, check for aim-assisted interactables
+	if not new_interactable:
+		new_interactable = _find_aim_assisted()
 
 	# Check angle restriction
 	if new_interactable and new_interactable.max_interaction_angle > 0.0:
@@ -81,7 +84,6 @@ func post_process(data: CharacterData, _delta: float) -> void:
 			current_interactable.interact(_character)
 			interacted.emit(current_interactable)
 
-			# If one_shot, clear focus since it can't be used again
 			if current_interactable and not current_interactable.can_interact():
 				current_interactable.set_focused(false)
 				unfocused.emit(current_interactable)
@@ -108,14 +110,119 @@ func _raycast() -> Interactable:
 
 	return _find_interactable(result.collider)
 
+func _find_aim_assisted() -> Interactable:
+	if not _character:
+		return null
+
+	var space := _character.get_world_3d().direct_space_state
+	if not space:
+		return null
+
+	var cam_pos := _camera.global_position
+	var cam_forward := -_camera.global_basis.z
+
+	# Sphere cast to find all nearby bodies
+	var shape := SphereShape3D.new()
+	shape.radius = interaction_distance
+
+	var shape_query := PhysicsShapeQueryParameters3D.new()
+	shape_query.shape = shape
+	shape_query.transform = Transform3D(Basis.IDENTITY, cam_pos)
+	shape_query.collision_mask = interaction_mask
+	shape_query.exclude = [_character.get_rid()]
+
+	var results := space.intersect_shape(shape_query, 32)
+
+	var best_interactable: Interactable = null
+	var best_score: float = -1.0
+
+	for result in results:
+		var collider: Node = result.collider
+		if not collider:
+			continue
+
+		var interactable := _find_interactable(collider)
+		if not interactable:
+			continue
+		if not interactable.can_interact():
+			continue
+		if not interactable.use_aim_assist:
+			continue
+
+		# Direction and distance to object
+		var target_pos := interactable.get_world_position()
+		var to_target := target_pos - cam_pos
+		var distance := to_target.length()
+
+		if distance < 0.01 or distance > interaction_distance:
+			continue
+
+		to_target = to_target.normalized()
+
+		# Check if within this interactable's aim assist cone
+		var dot := cam_forward.dot(to_target)
+		var cone_cos := cos(deg_to_rad(interactable.aim_assist_angle))
+
+		if dot < cone_cos:
+			continue
+
+		# Score: balance between looking-at and closeness
+		var angle_score := dot
+		var distance_score := 1.0 - (distance / interaction_distance)
+		var score := angle_score * 0.5 + distance_score * 0.5
+
+		if score > best_score:
+			best_score = score
+			best_interactable = interactable
+
+	return best_interactable
+
 func _find_interactable(node: Node) -> Interactable:
-	# Check direct children first
+	if node is Interactable:
+		return node
+	
+	# Search children of the starting node first
+	var result := _search_children_for_interactable(node)
+	if result:
+		return result
+	
+	# Walk up the tree, searching each ancestor's subtree
+	# Limit depth to avoid traversing the entire scene tree
+	var current := node.get_parent()
+	var max_climb := 8
+	var climbed := 0
+	
+	while current and climbed < max_climb:
+		if current is Interactable:
+			return current
+		
+		# Search this ancestor's direct children and their subtrees
+		# but skip the branch we already came from
+		result = _search_children_for_interactable(current)
+		if result:
+			return result
+		
+		# Stop at CharacterBody3D or root to avoid crossing into unrelated trees
+		if current is CharacterBody3D:
+			break
+		
+		current = current.get_parent()
+		climbed += 1
+	
+	return null
+
+
+func _search_children_for_interactable(node: Node, max_depth: int = 6) -> Interactable:
+	if max_depth <= 0:
+		return null
+	
 	for child in node.get_children():
 		if child is Interactable:
 			return child
-	# Check the node itself (if it somehow is an interactable)
-	if node is Interactable:
-		return node
+		var result := _search_children_for_interactable(child, max_depth - 1)
+		if result:
+			return result
+	
 	return null
 
 func _is_within_angle(interactable: Interactable) -> bool:

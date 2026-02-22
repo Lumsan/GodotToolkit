@@ -1,5 +1,4 @@
 # components/interaction/interactable.gd
-## Attach to any physics body to make it interactable.
 class_name Interactable
 extends Node
 
@@ -7,13 +6,19 @@ extends Node
 @export var enabled: bool = true
 @export var one_shot: bool = false
 
-## Optional: require the interactor to be within this angle (degrees) of
-## the parent's forward direction. 0 = any angle.
+@export_group("Aim Assist")
+## If true, player doesn't need to look exactly at this object
+@export var use_aim_assist: bool = false
+## How many degrees off-center the player can look
+@export_range(1.0, 45.0) var aim_assist_angle: float = 10.0
+
+@export_group("Angle Restriction")
+## If > 0, player must be within this angle of the object's forward direction
 @export_range(0.0, 180.0) var max_interaction_angle: float = 0.0
 
-## Optional: highlight color when focused
-@export var highlight_color: Color = Color(1.0, 1.0, 0.5, 1.0)
+@export_group("Highlight")
 @export var use_highlight: bool = false
+@export var highlight_color: Color = Color(1.0, 1.0, 0.5, 1.0)
 
 var is_focused: bool = false
 var _has_been_used: bool = false
@@ -52,6 +57,12 @@ func set_focused(value: bool) -> void:
 
 func reset() -> void:
 	_has_been_used = false
+
+func get_world_position() -> Vector3:
+	var parent := get_parent() as Node3D
+	if parent:
+		return parent.global_position
+	return Vector3.ZERO
 
 func _apply_highlight() -> void:
 	var parent := get_parent()

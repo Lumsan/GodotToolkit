@@ -7,6 +7,7 @@ var wish_jump: bool = false
 var wish_sprint: bool = false
 var wish_crouch: bool = false
 var mouse_motion: Vector2 = Vector2.ZERO
+var look_locked: bool = false
 
 var velocity: Vector3 = Vector3.ZERO
 var is_on_floor: bool = false

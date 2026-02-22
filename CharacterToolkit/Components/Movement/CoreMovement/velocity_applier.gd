@@ -2,9 +2,9 @@ class_name VelocityApplier
 extends Node
 
 @export var priority: int = 30
-@export var acceleration: float = 10.0
-@export var deceleration: float = 15.0
-@export var air_control: float = 0.3
+@export var acceleration: float = 50.0
+@export var deceleration: float = 50.0
+@export var air_control: float = 0.8
 
 var _character: Node3D
 

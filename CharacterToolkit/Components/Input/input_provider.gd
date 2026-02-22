@@ -4,7 +4,7 @@ class_name InputProvider
 extends Node
 
 @export var priority: int = 0
-@export var mouse_sensitivity: float = 0.002
+@export var mouse_sensitivity: float = 0.005
 
 var _mouse_motion: Vector2 = Vector2.ZERO
 
@@ -25,9 +25,14 @@ func process_input(data: CharacterData, _delta: float) -> void:
 		"move_left", "move_right",
 		"move_forward", "move_backward"
 	)
+
 	data.wish_jump = Input.is_action_just_pressed("jump")
 	data.wish_sprint = Input.is_action_pressed("sprint")
 	data.wish_crouch = Input.is_action_pressed("crouch")
 
-	data.mouse_motion = _mouse_motion * mouse_sensitivity
-	_mouse_motion = Vector2.ZERO
+	if data.look_locked:
+		data.mouse_motion = Vector2.ZERO
+		_mouse_motion = Vector2.ZERO
+	else:
+		data.mouse_motion = _mouse_motion * mouse_sensitivity
+		_mouse_motion = Vector2.ZERO

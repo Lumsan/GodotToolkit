@@ -3,7 +3,7 @@ class_name SprintModifier
 extends Node
 
 @export var priority: int = 25
-@export var sprint_multiplier: float = 1.6
+@export var sprint_multiplier: float = 1.4
 ## If true, sprinting only works while on the ground
 @export var ground_only: bool = false
 

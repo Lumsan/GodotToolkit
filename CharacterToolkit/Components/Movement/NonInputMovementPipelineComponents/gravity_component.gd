@@ -1,11 +1,10 @@
-# components/physics/gravity_component.gd
 class_name GravityComponent
 extends Node
 
-@export var priority: int = 0
+@export var priority: int = 20
 @export_group("Gravity Source")
-@export var use_project_gravity: bool = true
-@export var custom_gravity: float = 9.8
+@export var use_project_gravity: bool = false
+@export var custom_gravity: float = 25
 
 @export_group("Rise and Fall")
 @export var rise_multiplier: float = 0.5
@@ -33,6 +32,10 @@ func get_fall_gravity() -> float:
 	return _get_base_gravity() * fall_multiplier
 
 func process_physics(data: CharacterData, delta: float) -> void:
+	if data.gravity_suspended:
+		data.gravity_phase = CharacterData.GravityPhase.GROUNDED
+		return
+
 	if data.is_on_floor:
 		data.gravity_phase = CharacterData.GravityPhase.GROUNDED
 		if data.velocity.y < 0.0:

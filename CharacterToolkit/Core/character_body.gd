@@ -1,16 +1,17 @@
-# core/character_body.gd
 class_name ToolkitCharacterBody
 extends CharacterBody3D
 
 @export var data: CharacterData = CharacterData.new()
 
-## Optional: if set, move_and_slide is skipped while this AnimationPlayer is playing
 @export var blocking_animation_player: NodePath
 
 var _input_processors: Array[Node] = []
 var _physics_processors: Array[Node] = []
 var _post_processors: Array[Node] = []
 var _blocking_anim: AnimationPlayer
+
+func get_character_data() -> CharacterData:
+	return data
 
 func _ready() -> void:
 	if blocking_animation_player:
@@ -51,27 +52,21 @@ func _is_blocked() -> bool:
 
 func _physics_process(delta: float) -> void:
 	data.was_on_floor = data.is_on_floor
+	data.movement_blocked = _is_blocked()
 
 	# Phase 1: Input (always runs so buffering works)
 	for processor in _input_processors:
 		processor.process_input(data, delta)
 
-	# Phase 2: Physics
+	# Phase 2: Physics (includes FinalVelocityApplier which handles move_and_slide)
 	for processor in _physics_processors:
 		processor.process_physics(data, delta)
 
-	# Phase 3: Apply velocity (skip during blocking animations)
-	if not _is_blocked():
-		velocity = data.velocity
-		move_and_slide()
-		data.velocity = velocity
-		data.is_on_floor = is_on_floor()
-
-	# Phase 4: Post-process
+	# Phase 3: Post-process
 	for processor in _post_processors:
 		processor.post_process(data, delta)
 
-	# Phase 5: Clear per-frame input
+	# Phase 4: Clear per-frame input
 	data.mouse_motion = Vector2.ZERO
 
 	# Detect landing

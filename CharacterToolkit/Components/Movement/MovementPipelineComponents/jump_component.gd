@@ -1,4 +1,4 @@
-# components/physics/jump_component.gd
+@icon("res://Toolkit/GodotToolkit/CharacterToolkit/Components/Movement/MovementPipelineComponents/JumpComponentIcon3.png")
 class_name JumpComponent
 extends Node
 

@@ -1,3 +1,4 @@
+@icon("res://Toolkit/GodotToolkit/CharacterToolkit/Components/Movement/NonInputMovementPipelineComponents/GravityComponentIcon.png")
 class_name GravityComponent
 extends Node
 

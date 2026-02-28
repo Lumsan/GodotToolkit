@@ -1,3 +1,4 @@
+@icon("res://Toolkit/GodotToolkit/CharacterToolkit/Core/ToolkitCharacterBodyIcon.png")
 class_name ToolkitCharacterBody
 extends CharacterBody3D
 

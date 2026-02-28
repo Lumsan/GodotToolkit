@@ -1,4 +1,4 @@
-# components/audio/character_audio.gd
+@icon("res://Toolkit/GodotToolkit/CharacterToolkit/CharacterAudio/CharacterAudioIcon.png")
 class_name CharacterAudio
 extends Node
 

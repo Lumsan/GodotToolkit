@@ -1,4 +1,4 @@
-# components/movement/crouch_modifier.gd
+@icon("res://Toolkit/GodotToolkit/CharacterToolkit/Components/Movement/Modifiers/CrouchModifierIcon3.png")
 class_name CrouchModifier
 extends Node
 

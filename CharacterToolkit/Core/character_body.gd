@@ -8,6 +8,7 @@ extends CharacterBody3D
 
 var _input_processors: Array[Node] = []
 var _physics_processors: Array[Node] = []
+var _frame_processors :Array[Node] = []
 var _post_processors: Array[Node] = []
 var _blocking_anim: AnimationPlayer
 
@@ -23,6 +24,7 @@ func _gather_components() -> void:
 	_input_processors.clear()
 	_physics_processors.clear()
 	_post_processors.clear()
+	_frame_processors.clear()
 
 	for child in _get_all_descendants(self):
 		if child.has_method("process_input"):
@@ -31,6 +33,8 @@ func _gather_components() -> void:
 			_physics_processors.append(child)
 		if child.has_method("post_process"):
 			_post_processors.append(child)
+		if child.has_method("process_frame"):
+			_frame_processors.append(child)
 
 	var sorter := func(a: Node, b: Node) -> bool:
 		var a_pri: int = a.get("priority") if a.get("priority") != null else 0
@@ -39,6 +43,7 @@ func _gather_components() -> void:
 
 	_input_processors.sort_custom(sorter)
 	_physics_processors.sort_custom(sorter)
+	_frame_processors.sort_custom(sorter)
 	_post_processors.sort_custom(sorter)
 
 func _get_all_descendants(node: Node) -> Array[Node]:
@@ -50,6 +55,10 @@ func _get_all_descendants(node: Node) -> Array[Node]:
 
 func _is_blocked() -> bool:
 	return _blocking_anim and _blocking_anim.is_playing()
+
+func _process(delta: float) -> void:
+	for processor in _frame_processors:
+		processor.process_frame(data, delta)
 
 func _physics_process(delta: float) -> void:
 	data.was_on_floor = data.is_on_floor

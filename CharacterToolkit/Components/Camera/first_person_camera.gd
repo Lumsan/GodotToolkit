@@ -1,8 +1,7 @@
-# components/camera/first_person_camera.gd
 class_name FirstPersonCamera
 extends Node3D
 
-@export var priority: int = 0
+@export var priority: int = 1
 @export var min_pitch: float = -90.0
 @export var max_pitch: float = 60.0
 @export var head_bob_enabled: bool = false
@@ -36,19 +35,16 @@ func _find_character_body() -> Node3D:
 		node = node.get_parent()
 	return null
 
-func post_process(data: CharacterData, delta: float) -> void:
+func process_frame(data: CharacterData, delta: float) -> void:
 	if not _character:
 		return
-
-	# Accumulate mouse input into yaw and pitch
 	_yaw -= data.mouse_motion.x
 	_pitch -= data.mouse_motion.y
 	_pitch = clampf(_pitch, deg_to_rad(min_pitch), deg_to_rad(max_pitch))
-
-	# Apply as absolute values — no drift, no accumulation bugs
+	
 	_character.rotation = Vector3(0.0, _yaw, 0.0)
 	rotation.x = _pitch
-
+	
 	if head_bob_enabled and _camera:
 		_apply_head_bob(data, delta)
 

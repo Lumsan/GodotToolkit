@@ -55,7 +55,6 @@ func process_physics(data: CharacterData, delta: float) -> void:
 		_apply_horizontal_movement(data, wish_dir, delta)
 
 func _apply_horizontal_movement(data: CharacterData, wish_dir: Vector3, delta: float) -> void:
-	# Target includes external velocity (conveyor)
 	var target_velocity := wish_dir * data.move_speed + Vector3(data.external_velocity.x, 0.0, data.external_velocity.z)
 	var horizontal_velocity := Vector3(data.velocity.x, 0.0, data.velocity.z)
 

@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cglul0xcbnsms"
-path="res://.godot/imported/JumpComponentIcon.png-cd668b97d2fef36c74111780350b4ea8.ctex"
+path="res://.godot/imported/JumpComponentIcon.png-9dcb3647fa731ad43573b1b47294f0e2.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Toolkit/GodotToolkit/CharacterToolkit/Components/Movement/MovementPipelineComponents/JumpComponentIcon.png"
-dest_files=["res://.godot/imported/JumpComponentIcon.png-cd668b97d2fef36c74111780350b4ea8.ctex"]
+source_file="res://GodotToolkit/CharacterToolkit/Components/Movement/MovementPipelineComponents/JumpComponentIcon.png"
+dest_files=["res://.godot/imported/JumpComponentIcon.png-9dcb3647fa731ad43573b1b47294f0e2.ctex"]
 
 [params]
 

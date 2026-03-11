@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bvad4jlq6l72n"
-path="res://.godot/imported/ToolkitCharacterBodyIcon.png-60f0e8243398dfffff8fed6fcd0e6c32.ctex"
+path="res://.godot/imported/ToolkitCharacterBodyIcon.png-08fc6f8b86e2a2b0949c49211fa64ebf.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Toolkit/GodotToolkit/CharacterToolkit/Core/ToolkitCharacterBodyIcon.png"
-dest_files=["res://.godot/imported/ToolkitCharacterBodyIcon.png-60f0e8243398dfffff8fed6fcd0e6c32.ctex"]
+source_file="res://GodotToolkit/CharacterToolkit/Core/ToolkitCharacterBodyIcon.png"
+dest_files=["res://.godot/imported/ToolkitCharacterBodyIcon.png-08fc6f8b86e2a2b0949c49211fa64ebf.ctex"]
 
 [params]
 

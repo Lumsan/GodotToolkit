@@ -1,5 +1,5 @@
 # addons/character_toolkit/helpers/audio_manager.gd
-class_name AudioManager
+class_name AudioManagerClass
 extends Node
 
 @export var sfx_pool_size: int = 16

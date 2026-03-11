@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://o274r3qkuhet"
-path="res://.godot/imported/CrouchModifierIcon.png-250dbe28f4aa7133e141e29fb6b28f92.ctex"
+path="res://.godot/imported/CrouchModifierIcon.png-11c697b393961fedf141276b3e98a638.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Toolkit/GodotToolkit/CharacterToolkit/Components/Movement/Modifiers/CrouchModifierIcon.png"
-dest_files=["res://.godot/imported/CrouchModifierIcon.png-250dbe28f4aa7133e141e29fb6b28f92.ctex"]
+source_file="res://GodotToolkit/CharacterToolkit/Components/Movement/Modifiers/CrouchModifierIcon.png"
+dest_files=["res://.godot/imported/CrouchModifierIcon.png-11c697b393961fedf141276b3e98a638.ctex"]
 
 [params]
 

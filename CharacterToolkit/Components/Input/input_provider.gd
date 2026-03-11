@@ -42,6 +42,7 @@ func process_input(data: CharacterData, _delta: float) -> void:
 		"move_forward", "move_backward"
 	)
 	data.wish_jump = Input.is_action_just_pressed("jump")
+	data.hold_jump = Input.is_action_pressed("jump")
 	data.wish_sprint = Input.is_action_pressed("sprint")
 	data.wish_crouch = Input.is_action_pressed("crouch")
 	

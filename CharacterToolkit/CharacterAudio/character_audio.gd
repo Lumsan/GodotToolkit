@@ -93,12 +93,12 @@ func _play_footstep(data: CharacterData) -> void:
 	if sounds.is_empty():
 		return
 
-	Audio.play_sfx_3d_random(sounds, _character.global_position, volume)
+	AudioManager.play_sfx_3d_random(sounds, _character.global_position, volume)
 
 func _on_jumped() -> void:
 	if not jump_sounds.is_empty() and _character:
-		Audio.play_sfx_3d_random(jump_sounds, _character.global_position, jump_volume_db)
+		AudioManager.play_sfx_3d_random(jump_sounds, _character.global_position, jump_volume_db)
 
 func _on_landed() -> void:
 	if not land_sounds.is_empty() and _character:
-		Audio.play_sfx_3d_random(land_sounds, _character.global_position, land_volume_db)
+		AudioManager.play_sfx_3d_random(land_sounds, _character.global_position, land_volume_db)

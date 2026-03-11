@@ -1,6 +1,5 @@
 # game/ui/interaction_prompt.gd
 ## Simple UI that shows "Press [E] to Interact" when looking at something.
-## This goes in your game folder, not the toolkit.
 class_name InteractionPrompt
 extends Control
 

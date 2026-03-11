@@ -4,6 +4,7 @@ extends Resource
 # ── Input ──
 var input_direction: Vector2 = Vector2.ZERO
 var wish_jump: bool = false
+var hold_jump: bool = false
 var wish_sprint: bool = false
 var wish_crouch: bool = false
 var mouse_motion: Vector2 = Vector2.ZERO

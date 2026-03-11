@@ -1,4 +1,3 @@
-# components/physics/static_velocity_modifier.gd
 class_name StaticVelocityModifier
 extends Node
 

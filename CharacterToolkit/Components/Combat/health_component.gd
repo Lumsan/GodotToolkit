@@ -33,7 +33,7 @@ var current_health: int
 var is_dead: bool = false
 var is_invincible: bool = false
 
-var _iframe_timer: float = 0.0
+var _iframe_timer: SceneTreeTimer = null
 
 # ── Signals ──
 signal health_changed(old_value: int, new_value: int)
@@ -57,17 +57,13 @@ var missing_health: int:
 	get:
 		return max_health - current_health
 
+
 func _ready() -> void:
 	if start_at_max:
 		current_health = max_health
 	else:
 		current_health = mini(starting_health, max_health)
 
-func _physics_process(delta: float) -> void:
-	if _iframe_timer > 0.0:
-		_iframe_timer -= delta
-		if _iframe_timer <= 0.0:
-			is_invincible = false
 
 ## Deal damage to this entity. Returns actual damage dealt.
 func take_damage(amount: int, source: Node = null) -> int:
@@ -98,16 +94,14 @@ func take_damage(amount: int, source: Node = null) -> int:
 	health_changed.emit(old_health, current_health)
 	damaged.emit(actual, source)
 
-	# Start iframes
-	if enable_iframes and not is_dead:
-		is_invincible = true
-		_iframe_timer = iframe_duration
-
-	# Check death
+	# Check death before starting iframes — no point giving iframes to a dead entity
 	if current_health <= 0:
 		_die(source)
+	elif enable_iframes:
+		_start_iframes()
 
 	return actual
+
 
 ## Heal this entity. Returns actual amount healed.
 func heal(amount: int, source: Node = null) -> int:
@@ -129,6 +123,7 @@ func heal(amount: int, source: Node = null) -> int:
 
 	return actual
 
+
 ## Set health directly. Bypasses damage multiplier and iframes.
 func set_health(value: int) -> void:
 	var old_health := current_health
@@ -140,6 +135,7 @@ func set_health(value: int) -> void:
 	if current_health <= 0 and not is_dead:
 		_die(null)
 
+
 ## Kill instantly regardless of health or invincibility.
 func kill(source: Node = null) -> void:
 	if is_dead:
@@ -150,14 +146,14 @@ func kill(source: Node = null) -> void:
 	health_changed.emit(old_health, 0)
 	_die(source)
 
+
 ## Bring back from death with specified health.
 func revive(health: int = -1) -> void:
 	if not is_dead:
 		return
 
 	is_dead = false
-	is_invincible = false
-	_iframe_timer = 0.0
+	_cancel_iframes()
 
 	var revive_health := health if health > 0 else max_health
 	var old_health := current_health
@@ -165,6 +161,7 @@ func revive(health: int = -1) -> void:
 
 	health_changed.emit(old_health, current_health)
 	revived.emit()
+
 
 ## Change max health. Can optionally scale current health proportionally.
 func set_max_health(new_max: int, scale_current: bool = false) -> void:
@@ -184,10 +181,33 @@ func set_max_health(new_max: int, scale_current: bool = false) -> void:
 	if old_health != current_health:
 		health_changed.emit(old_health, current_health)
 
+
+# ── Internal ──
+
+func _start_iframes() -> void:
+	_cancel_iframes()
+	is_invincible = true
+	_iframe_timer = get_tree().create_timer(iframe_duration)
+	_iframe_timer.timeout.connect(_on_iframe_expired)
+
+
+func _cancel_iframes() -> void:
+	if _iframe_timer:
+		# Disconnect so the callback doesn't fire after cancellation
+		if _iframe_timer.timeout.is_connected(_on_iframe_expired):
+			_iframe_timer.timeout.disconnect(_on_iframe_expired)
+		_iframe_timer = null
+	is_invincible = false
+
+
+func _on_iframe_expired() -> void:
+	_iframe_timer = null
+	is_invincible = false
+
+
 func _die(source: Node) -> void:
 	is_dead = true
-	is_invincible = false
-	_iframe_timer = 0.0
+	_cancel_iframes()
 	died.emit(source)
 
 	if auto_destroy:

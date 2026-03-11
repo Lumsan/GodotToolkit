@@ -75,7 +75,7 @@ func process_physics(data: CharacterData, delta: float) -> void:
 
 	# Variable jump height
 	if variable_jump and _is_jumping:
-		if not Input.is_action_pressed("jump") and data.velocity.y > 0.0:
+		if not data.hold_jump and data.velocity.y > 0.0:
 			data.velocity.y *= variable_jump_damping
 			_is_jumping = false
 

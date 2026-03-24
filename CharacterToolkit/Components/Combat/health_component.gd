@@ -10,9 +10,8 @@ extends Node
 @export var start_at_max: bool = true
 @export var starting_health: int = 100
 
-@export_group("Invincibility")
-## Brief invincibility after taking damage
-@export var enable_iframes: bool = false
+@export_group("Iframes")
+@export_custom(PROPERTY_HINT_GROUP_ENABLE, "Iframes") var enable_iframes: bool
 @export var iframe_duration: float = 0.5
 
 @export_group("Damage Modifiers")

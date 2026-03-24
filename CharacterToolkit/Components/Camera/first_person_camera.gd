@@ -4,10 +4,13 @@ extends Node3D
 @export var priority: int = 1
 @export var min_pitch: float = -90.0
 @export var max_pitch: float = 60.0
-@export var head_bob_enabled: bool = false
+
+@export_group("Head bob")
+@export_custom(PROPERTY_HINT_GROUP_ENABLE, "Head bob") var head_bob_enabled: bool
 @export var head_bob_frequency: float = 2.0
 @export var head_bob_amplitude: float = 0.03
 
+@export_group("")
 @export var camera_path: NodePath = "Camera3D"
 
 var _yaw: float = 0.0

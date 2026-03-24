@@ -4,6 +4,7 @@ extends CharacterBody3D
 
 @export var data: CharacterData = CharacterData.new()
 
+## If an animation from this animation_player is playing, the palyer will not be able to move.
 @export var blocking_animation_player: NodePath
 
 var _input_processors: Array[Node] = []

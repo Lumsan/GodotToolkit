@@ -58,3 +58,6 @@ func _get_property_list():
 				"usage": PROPERTY_USAGE_DEFAULT,
 			}]
 	return []
+
+
+func _validate_property(property: Dictionary) -> void:

@@ -3,8 +3,8 @@ class_name GravityComponent
 extends Node
 
 @export var priority: int = 20
-@export_group("Gravity Source")
-@export var use_project_gravity: bool = false
+@export_group("Custom Gravity")
+@export_custom(PROPERTY_HINT_GROUP_ENABLE, "Custom Gravity") var use_custom_gravity : bool
 @export var custom_gravity: float = 25
 
 @export_group("Rise and Fall")
@@ -13,16 +13,16 @@ extends Node
 @export var terminal_velocity: float = 50.0
 
 @export_group("Apex Hang Time")
-@export var enable_hang_time: bool = false
+@export_custom(PROPERTY_HINT_GROUP_ENABLE, "Apex Hang Time") var enable_hang_time : bool
 @export var hang_time_velocity_threshold: float = 2.0
 @export var hang_time_gravity_multiplier: float = 0.3
 
 @export_group("Fast Fall")
-@export var enable_fast_fall: bool = false
+@export_custom(PROPERTY_HINT_GROUP_ENABLE, "Fast Fall") var enable_fast_fall: bool
 @export var fast_fall_multiplier: float = 1.6
 
 func _get_base_gravity() -> float:
-	if use_project_gravity:
+	if not use_custom_gravity:
 		return ProjectSettings.get_setting("physics/3d/default_gravity", 9.8)
 	return custom_gravity
 

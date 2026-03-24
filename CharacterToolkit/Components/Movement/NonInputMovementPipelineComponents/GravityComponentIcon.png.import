@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://tm45rdbacpif"
-path="res://.godot/imported/GravityComponentIcon.png-a2ef6ea468768049ba073e3286fb7469.ctex"
+path="res://.godot/imported/GravityComponentIcon.png-e31f475c2b592676f7c04e5cabdb41c6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://GodotToolkit/CharacterToolkit/Components/Movement/NonInputMovementPipelineComponents/GravityComponentIcon.png"
-dest_files=["res://.godot/imported/GravityComponentIcon.png-a2ef6ea468768049ba073e3286fb7469.ctex"]
+source_file="res://Toolkit/GodotToolkit/CharacterToolkit/Components/Movement/NonInputMovementPipelineComponents/GravityComponentIcon.png"
+dest_files=["res://.godot/imported/GravityComponentIcon.png-e31f475c2b592676f7c04e5cabdb41c6.ctex"]
 
 [params]
 

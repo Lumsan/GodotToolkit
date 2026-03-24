@@ -10,15 +10,16 @@ extends Node
 @export_range(0.0, 1.0) var variable_jump_damping: float = 0.4
 
 @export_group("Multi Jump")
-@export var allow_multi_jump: bool = false
+@export_custom(PROPERTY_HINT_GROUP_ENABLE, "Multi jump") var multi_jump: bool
 @export var max_jumps: int = 2
 @export var multi_jump_height_decay: float = 1.0
 
 @export_group("Buffering")
+@export_custom(PROPERTY_HINT_GROUP_ENABLE, "Buffering") var Buffering: bool
 @export var jump_buffer_time: float = 0.1
 
 @export_group("Coyote Time")
-@export var enable_coyote_time: bool = true
+@export_custom(PROPERTY_HINT_GROUP_ENABLE, "Coyote Time") var enable_coyote_time: bool
 @export var coyote_duration: float = 0.15
 
 var _jumps_remaining: int = 0
@@ -65,7 +66,7 @@ func process_physics(data: CharacterData, delta: float) -> void:
 			can_jump = true
 		elif _has_coyote_time():
 			can_jump = true
-		elif allow_multi_jump and _jumps_remaining > 0 and _current_jump_index > 0:
+		elif multi_jump and _jumps_remaining > 0 and _current_jump_index > 0:
 			can_jump = true
 
 		if can_jump:

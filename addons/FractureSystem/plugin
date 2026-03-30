@@ -1,0 +1,7 @@
+[plugin]
+
+name="Fracture System"
+description="Voronoi-based mesh fracture and destruction system"
+author="FractureSystem"
+version="1.0"
+script="fracture_plugin.gd"
